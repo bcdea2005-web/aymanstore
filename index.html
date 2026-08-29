@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>متجر نور للملابس | Noor Clothes Store</title>
+<title>متجر أيمن للملابس | Ayman Clothes Store</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
@@ -13,117 +13,123 @@
 <script>
 tailwind.config={theme:{extend:{
   fontFamily:{tajawal:['Tajawal','sans-serif']},
-  colors:{gold:{50:'#fffdf2',100:'#fdf6d8',200:'#fbecab',300:'#f7dc74',400:'#f0c445',500:'#e0a72a',600:'#c4881c',700:'#9c6618',800:'#7c501b',900:'#66421a'}}
+  colors:{gold:{50:'#f2f8ff',100:'#eaf3fd',200:'#b9d7f7',300:'#8fbdf0',400:'#5fa0e6',500:'#3d84d6',600:'#2b6bbf',700:'#245aa0',800:'#234b80',900:'#213f66'}}
 }}}
 </script>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Tajawal',sans-serif;overflow-x:hidden;background:#0d0a04;color:#fdf6d8}
+body{font-family:'Tajawal',sans-serif;overflow-x:hidden;background:#060b14;color:#eaf3fd}
 
 .bg-static{position:fixed;inset:0;z-index:-2;
   background:
-    radial-gradient(circle at 15% 18%,rgba(240,196,69,.13) 0%,transparent 42%),
-    radial-gradient(circle at 85% 78%,rgba(196,136,28,.12) 0%,transparent 45%),
-    radial-gradient(circle at 55% 45%,rgba(253,246,216,.035) 0%,transparent 55%),
-    linear-gradient(165deg,#0b0803 0%,#160f05 48%,#0b0803 100%)}
+    radial-gradient(circle at 15% 18%,rgba(95,160,230,.13) 0%,transparent 42%),
+    radial-gradient(circle at 85% 78%,rgba(43,107,191,.12) 0%,transparent 45%),
+    radial-gradient(circle at 55% 45%,rgba(220,235,251,.035) 0%,transparent 55%),
+    linear-gradient(165deg,#05090f 0%,#0a1424 48%,#05090f 100%)}
 .bg-glow{position:fixed;inset:0;z-index:-1;pointer-events:none;
-  background:radial-gradient(circle at 50% 30%,rgba(240,196,69,.09) 0%,transparent 55%);
+  background:radial-gradient(circle at 50% 30%,rgba(95,160,230,.09) 0%,transparent 55%);
   opacity:.5;animation:softGlow 26s ease-in-out infinite;will-change:opacity}
 @keyframes softGlow{0%,100%{opacity:.35}50%{opacity:.75}}
 
 #splashScreen{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;
-  background:radial-gradient(circle at 50% 50%,#1a1206,#0d0a04);transition:opacity .8s ease,visibility .8s ease}
+  background:radial-gradient(circle at 50% 50%,#0c1a2e,#060b14);transition:opacity .8s ease,visibility .8s ease}
 #splashScreen.gone{opacity:0;visibility:hidden;pointer-events:none}
-.splash-crown{font-size:3.5rem;opacity:0;transform:scale(.3) rotate(-30deg);
-  animation:crownIn .8s cubic-bezier(.34,1.56,.64,1) .3s forwards;
-  background:linear-gradient(135deg,#fdf6d8,#f0c445 45%,#c4881c);
+.splash-shirt{font-size:3.8rem;opacity:0;transform-origin:top center;transform:scale(.3);
+  animation:shirtIn .8s cubic-bezier(.34,1.56,.64,1) .3s forwards,shirtSway 3.2s ease-in-out 1.1s infinite;
+  background:linear-gradient(135deg,#eaf3fd,#5fa0e6 45%,#2b6bbf);
   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-  filter:drop-shadow(0 0 25px rgba(240,196,69,.5))}
-@keyframes crownIn{to{opacity:1;transform:scale(1) rotate(0)}}
+  filter:drop-shadow(0 6px 22px rgba(95,160,230,.55));will-change:transform}
+@keyframes shirtIn{to{opacity:1;transform:scale(1)}}
+@keyframes shirtSway{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
+/* Hanger line above the swaying shirt */
+.splash-hanger{width:70px;height:34px;margin:0 auto -6px;border:3px solid rgba(143,189,240,.6);border-bottom:none;
+  border-radius:60px 60px 0 0;position:relative;opacity:0;animation:subIn .6s ease .2s forwards}
+.splash-hanger::after{content:'';position:absolute;top:-9px;left:50%;transform:translateX(-50%);
+  width:9px;height:9px;border-radius:50%;background:rgba(143,189,240,.7)}
 
 .splash-title{font-size:5rem;font-weight:900;opacity:0;
-  background:linear-gradient(135deg,#fdf6d8,#f0c445 40%,#c4881c,#f7dc74);
+  background:linear-gradient(135deg,#eaf3fd,#5fa0e6 40%,#2b6bbf,#8fbdf0);
   background-size:300% 300%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
   animation:titleIn .9s cubic-bezier(.34,1.56,.64,1) .9s forwards,shimmer 3s ease-in-out 1.8s infinite;
-  filter:drop-shadow(0 0 30px rgba(240,196,69,.4))}
+  filter:drop-shadow(0 0 30px rgba(95,160,230,.4))}
 @keyframes titleIn{to{opacity:1}}
 @keyframes shimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
 
-.splash-sub{font-size:1.25rem;opacity:0;color:rgba(253,246,216,.55);letter-spacing:.08em;animation:subIn .7s ease 1.5s forwards}
+.splash-sub{font-size:1.25rem;opacity:0;color:rgba(220,235,251,.55);letter-spacing:.08em;animation:subIn .7s ease 1.5s forwards}
 @keyframes subIn{to{opacity:1}}
-.splash-line{width:0;height:3px;border-radius:4px;margin:0 auto;background:linear-gradient(90deg,transparent,#f0c445,transparent);animation:lineGrow 1.2s ease 1.8s forwards}
+.splash-line{width:0;height:3px;border-radius:4px;margin:0 auto;background:linear-gradient(90deg,transparent,#5fa0e6,transparent);animation:lineGrow 1.2s ease 1.8s forwards}
 @keyframes lineGrow{to{width:180px}}
 .splash-dots{display:flex;gap:8px;margin-top:2rem;opacity:0;animation:dotsIn .5s ease 2.3s forwards}
 @keyframes dotsIn{to{opacity:1}}
-.splash-dot{width:8px;height:8px;border-radius:50%;background:rgba(240,196,69,.35);animation:dotPulse 1.4s ease-in-out infinite}
+.splash-dot{width:8px;height:8px;border-radius:50%;background:rgba(95,160,230,.35);animation:dotPulse 1.4s ease-in-out infinite}
 .splash-dot:nth-child(2){animation-delay:.2s}
 .splash-dot:nth-child(3){animation-delay:.4s}
-@keyframes dotPulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.2);background:#f0c445}}
+@keyframes dotPulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.2);background:#5fa0e6}}
 
 .page{transition:opacity .5s ease,transform .5s ease}
 .page-hidden{opacity:0;transform:translateY(24px);pointer-events:none;position:absolute;width:100%}
 .page-visible{opacity:1;transform:none}
 
-.branch-btn{position:relative;overflow:hidden;background:rgba(255,255,255,.045);border:1px solid rgba(240,196,69,.18);transition:transform .25s,border-color .25s,background .25s,box-shadow .25s}
-.branch-btn:hover{transform:translateY(-6px);background:rgba(240,196,69,.09);border-color:rgba(240,196,69,.6);box-shadow:0 16px 44px rgba(224,167,42,.22)}
+.branch-btn{position:relative;overflow:hidden;background:rgba(255,255,255,.045);border:1px solid rgba(95,160,230,.18);transition:transform .25s,border-color .25s,background .25s,box-shadow .25s}
+.branch-btn:hover{transform:translateY(-6px);background:rgba(95,160,230,.09);border-color:rgba(95,160,230,.6);box-shadow:0 16px 44px rgba(61,132,214,.22)}
 .branch-btn .icon-wrap{transition:transform .25s}
 .branch-btn:hover .icon-wrap{transform:scale(1.12)}
 
-.product-card{background:rgba(255,255,255,.04);border:1px solid rgba(240,196,69,.14);transition:transform .25s,border-color .25s,box-shadow .25s;overflow:hidden}
-.product-card:hover{transform:translateY(-6px);border-color:rgba(240,196,69,.5);box-shadow:0 16px 42px rgba(0,0,0,.45)}
+.product-card{background:rgba(255,255,255,.04);border:1px solid rgba(95,160,230,.14);transition:transform .25s,border-color .25s,box-shadow .25s;overflow:hidden}
+.product-card:hover{transform:translateY(-6px);border-color:rgba(95,160,230,.5);box-shadow:0 16px 42px rgba(0,0,0,.45)}
 
-.thumb{position:relative;background:linear-gradient(145deg,rgba(240,196,69,.16),rgba(124,80,27,.10) 60%,rgba(0,0,0,.15));overflow:hidden;border-bottom:1px solid rgba(240,196,69,.14)}
-.thumb::before{content:'';position:absolute;inset:0;opacity:.35;background:repeating-linear-gradient(45deg,rgba(253,246,216,.045) 0 2px,transparent 2px 12px)}
-.thumb i{position:relative;z-index:2;font-size:3.2rem;background:linear-gradient(135deg,#fdf6d8,#f0c445 45%,#b8790f);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 4px 10px rgba(224,167,42,.35));transition:transform .25s}
+.thumb{position:relative;background:linear-gradient(145deg,rgba(95,160,230,.16),rgba(35,75,128,.10) 60%,rgba(0,0,0,.15));overflow:hidden;border-bottom:1px solid rgba(95,160,230,.14)}
+.thumb::before{content:'';position:absolute;inset:0;opacity:.35;background:repeating-linear-gradient(45deg,rgba(220,235,251,.045) 0 2px,transparent 2px 12px)}
+.thumb i{position:relative;z-index:2;font-size:3.2rem;background:linear-gradient(135deg,#eaf3fd,#5fa0e6 45%,#245aa0);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 4px 10px rgba(61,132,214,.35));transition:transform .25s}
 .product-card:hover .thumb i{transform:scale(1.12)}
 
 .modal-overlay{transition:opacity .3s}
 .modal-overlay.hidden{opacity:0;pointer-events:none}
 .modal-content{transition:transform .35s cubic-bezier(.34,1.4,.64,1),opacity .3s}
 .modal-overlay.hidden .modal-content{transform:scale(.92) translateY(20px);opacity:0}
-.modal-thumb{background:linear-gradient(145deg,rgba(240,196,69,.2),rgba(124,80,27,.12) 60%,rgba(0,0,0,.2));position:relative;overflow:hidden}
-.modal-thumb i{position:relative;z-index:2;font-size:5.5rem;background:linear-gradient(135deg,#fdf6d8,#f0c445 45%,#b8790f);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 6px 16px rgba(224,167,42,.4))}
+.modal-thumb{background:linear-gradient(145deg,rgba(95,160,230,.2),rgba(35,75,128,.12) 60%,rgba(0,0,0,.2));position:relative;overflow:hidden}
+.modal-thumb i{position:relative;z-index:2;font-size:5.5rem;background:linear-gradient(135deg,#eaf3fd,#5fa0e6 45%,#245aa0);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 6px 16px rgba(61,132,214,.4))}
 
-.size-btn{transition:all .2s;border:2px solid rgba(240,196,69,.22);background:rgba(255,255,255,.04)}
-.size-btn.active{border-color:#f0c445;background:rgba(240,196,69,.25);box-shadow:0 0 14px rgba(240,196,69,.3)}
+.size-btn{transition:all .2s;border:2px solid rgba(95,160,230,.22);background:rgba(255,255,255,.04)}
+.size-btn.active{border-color:#5fa0e6;background:rgba(95,160,230,.25);box-shadow:0 0 14px rgba(95,160,230,.3)}
 .color-option{transition:transform .2s,border-color .2s;cursor:pointer;border:3px solid transparent}
-.color-option.active{border-color:#f0c445;transform:scale(1.18);box-shadow:0 0 14px rgba(240,196,69,.5)}
+.color-option.active{border-color:#5fa0e6;transform:scale(1.18);box-shadow:0 0 14px rgba(95,160,230,.5)}
 .qty-btn{transition:background .2s,border-color .2s}
-.qty-btn:hover{background:rgba(240,196,69,.22);border-color:rgba(240,196,69,.4)}
+.qty-btn:hover{background:rgba(95,160,230,.22);border-color:rgba(95,160,230,.4)}
 
-.navbar{background:rgba(11,8,3,.9);backdrop-filter:blur(14px);border-bottom:1px solid rgba(240,196,69,.15)}
-.logo-text{background:linear-gradient(135deg,#fdf6d8,#f0c445 40%,#c4881c);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.navbar{background:rgba(6,11,20,.9);backdrop-filter:blur(14px);border-bottom:1px solid rgba(95,160,230,.15)}
+.logo-text{background:linear-gradient(135deg,#eaf3fd,#5fa0e6 40%,#2b6bbf);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 
-.gold-btn{background:linear-gradient(135deg,#f7dc74,#f0c445 42%,#c4881c);color:#1e1406;transition:transform .2s,box-shadow .2s}
-.gold-btn:hover{box-shadow:0 10px 28px rgba(224,167,42,.35);transform:translateY(-2px)}
+.gold-btn{background:linear-gradient(135deg,#8fbdf0,#5fa0e6 42%,#2b6bbf);color:#071018;transition:transform .2s,box-shadow .2s}
+.gold-btn:hover{box-shadow:0 10px 28px rgba(61,132,214,.35);transform:translateY(-2px)}
 
 .fab-cart{position:fixed;bottom:22px;left:22px;z-index:75}
-.fab-cart button{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#f7dc74,#f0c445 45%,#b8790f);color:#1b1206;box-shadow:0 10px 28px rgba(224,167,42,.42);transition:transform .25s}
+.fab-cart button{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#8fbdf0,#5fa0e6 45%,#245aa0);color:#0c1a2e;box-shadow:0 10px 28px rgba(61,132,214,.42);transition:transform .25s}
 .fab-cart button:hover{transform:scale(1.07)}
 
-.cart-panel{position:fixed;bottom:94px;left:22px;width:376px;max-height:68vh;z-index:74;display:flex;flex-direction:column;transform-origin:bottom left;background:rgba(17,12,5,.96);backdrop-filter:blur(18px);border:1px solid rgba(240,196,69,.3);border-radius:22px;overflow:hidden;box-shadow:0 22px 60px rgba(0,0,0,.6);transition:opacity .28s ease,transform .32s cubic-bezier(.34,1.4,.64,1)}
+.cart-panel{position:fixed;bottom:94px;left:22px;width:376px;max-height:68vh;z-index:74;display:flex;flex-direction:column;transform-origin:bottom left;background:rgba(8,18,31,.96);backdrop-filter:blur(18px);border:1px solid rgba(95,160,230,.3);border-radius:22px;overflow:hidden;box-shadow:0 22px 60px rgba(0,0,0,.6);transition:opacity .28s ease,transform .32s cubic-bezier(.34,1.4,.64,1)}
 .cart-panel.closed{opacity:0;transform:translateY(20px) scale(.9);pointer-events:none}
 @media(max-width:640px){.cart-panel{left:12px;right:12px;width:auto;max-height:74vh}}
 
-.cart-item{background:rgba(255,255,255,.045);border:1px solid rgba(240,196,69,.12)}
-.mini-thumb{background:linear-gradient(145deg,rgba(240,196,69,.2),rgba(124,80,27,.12));border:1px solid rgba(240,196,69,.2)}
-.mini-thumb i{color:#f0c445;font-size:1.35rem}
+.cart-item{background:rgba(255,255,255,.045);border:1px solid rgba(95,160,230,.12)}
+.mini-thumb{background:linear-gradient(145deg,rgba(95,160,230,.2),rgba(35,75,128,.12));border:1px solid rgba(95,160,230,.2)}
+.mini-thumb i{color:#5fa0e6;font-size:1.35rem}
 
-.toast{animation:tIn .3s ease,tOut .35s ease 2.5s forwards;background:#241707!important;color:#fff8df!important;border:1px solid rgba(240,196,69,.5);min-width:260px;justify-content:center;box-shadow:0 12px 32px rgba(0,0,0,.7);opacity:1!important}.toast span{color:#fff8df!important;opacity:1!important}.toast i{font-size:1.05rem;flex-shrink:0}
+.toast{animation:tIn .3s ease,tOut .35s ease 2.5s forwards;background:#0c1a2e!important;color:#eef6ff!important;border:1px solid rgba(95,160,230,.5);min-width:260px;justify-content:center;box-shadow:0 12px 32px rgba(0,0,0,.7);opacity:1!important}.toast span{color:#eef6ff!important;opacity:1!important}.toast i{font-size:1.05rem;flex-shrink:0}
 .image-lightbox{transition:opacity .25s}.image-lightbox.hidden{opacity:0;pointer-events:none}.image-lightbox img{max-height:86vh;max-width:92vw;object-fit:contain}
 @keyframes tIn{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:none}}
 @keyframes tOut{to{opacity:0;transform:translateY(-14px)}}
 
-.whatsapp-btn{background:linear-gradient(135deg,#25d366,#0e7a5f);border:1px solid rgba(240,196,69,.3);transition:transform .2s,box-shadow .2s}
+.whatsapp-btn{background:linear-gradient(135deg,#25d366,#0e7a5f);border:1px solid rgba(95,160,230,.3);transition:transform .2s,box-shadow .2s}
 .whatsapp-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(37,211,102,.3)}
-.form-input{background:rgba(255,255,255,.05);border:1px solid rgba(240,196,69,.22);color:#fdf6d8}
-.form-input:focus{border-color:#f0c445;outline:none}
+.form-input{background:rgba(255,255,255,.05);border:1px solid rgba(95,160,230,.22);color:#eaf3fd}
+.form-input:focus{border-color:#5fa0e6;outline:none}
 
-.branch-dropdown{background:rgba(17,12,5,.97);backdrop-filter:blur(14px);border:1px solid rgba(240,196,69,.22)}
+.branch-dropdown{background:rgba(8,18,31,.97);backdrop-filter:blur(14px);border:1px solid rgba(95,160,230,.22)}
 .branch-reveal{opacity:0;transform:translateY(24px) scale(.95)}
 .branch-reveal.show{opacity:1;transform:none;transition:opacity .45s ease,transform .45s ease}
-.deliv-chip{background:rgba(240,196,69,.12);border:1px solid rgba(240,196,69,.3)}
+.deliv-chip{background:rgba(95,160,230,.12);border:1px solid rgba(95,160,230,.3)}
 
 </style>
 </head>
@@ -136,8 +142,9 @@ body{font-family:'Tajawal',sans-serif;overflow-x:hidden;background:#0d0a04;color
 <!-- Splash Screen -->
 <div id="splashScreen">
   <div class="flex flex-col items-center justify-center text-center px-6">
-    <div class="splash-crown mb-4"><i class="fas fa-crown"></i></div>
-    <h1 class="splash-title">نور</h1>
+    <div class="splash-hanger"></div>
+    <div class="splash-shirt mb-4"><i class="fas fa-shirt"></i></div>
+    <h1 class="splash-title">أيمن</h1>
     <p class="splash-sub">للملابس العصرية</p>
     <div class="splash-line mt-5"></div>
     <div class="splash-dots">
@@ -155,9 +162,9 @@ body{font-family:'Tajawal',sans-serif;overflow-x:hidden;background:#0d0a04;color
   <div class="max-w-4xl w-full text-center">
     <div class="mb-10">
       <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-gold-300 via-gold-400 to-gold-700 mb-5 shadow-2xl shadow-gold-600/30">
-        <i class="fas fa-crown text-3xl text-[#2a1c07]"></i>
+        <i class="fas fa-shirt text-3xl text-[#071018]"></i>
       </div>
-      <h1 class="text-5xl md:text-7xl font-black logo-text mb-3">متجر نور</h1>
+      <h1 class="text-5xl md:text-7xl font-black logo-text mb-3">متجر أيمن</h1>
       <p class="text-xl text-gold-200/70">للملابس العصرية</p>
       <div class="w-28 h-[3px] bg-gradient-to-r from-transparent via-gold-400 to-transparent mx-auto mt-5 rounded-full"></div>
     </div>
@@ -166,7 +173,7 @@ body{font-family:'Tajawal',sans-serif;overflow-x:hidden;background:#0d0a04;color
       <p class="text-gold-100/45">حدد أقرب فرع إليك لبدء التسوق</p>
     </div>
     <div id="branchGrid" class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-5"></div>
-    <div class="mt-10 text-gold-100/25 text-sm">© 2025 متجر نور للملابس — جميع الحقوق محفوظة</div>
+    <div class="mt-10 text-gold-100/25 text-sm">© 2025 متجر أيمن للملابس — جميع الحقوق محفوظة</div>
   </div>
 </div>
 
@@ -176,8 +183,8 @@ body{font-family:'Tajawal',sans-serif;overflow-x:hidden;background:#0d0a04;color
     <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
       <div class="flex items-center gap-2.5 cursor-pointer" onclick="goToBranchPage()">
         <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-gold-300 to-gold-700 flex items-center justify-center">
-          <i class="fas fa-crown text-[#2a1c07] text-sm"></i></div>
-        <h1 class="text-lg md:text-xl font-bold logo-text">متجر نور</h1>
+          <i class="fas fa-shirt text-[#071018] text-sm"></i></div>
+        <h1 class="text-lg md:text-xl font-bold logo-text">متجر أيمن</h1>
       </div>
       <div class="relative" id="branchWrap">
         <button onclick="toggleBranchDD(event)" class="flex items-center gap-2 px-3 md:px-4 py-2 rounded-xl bg-gold-400/10 border border-gold-400/25 hover:bg-gold-400/20 transition text-sm">
@@ -190,7 +197,7 @@ body{font-family:'Tajawal',sans-serif;overflow-x:hidden;background:#0d0a04;color
       <button onclick="toggleCart(event)" class="relative flex items-center gap-2 px-3 md:px-4 py-2 rounded-xl bg-gold-400/10 border border-gold-400/25 hover:bg-gold-400/20 transition">
         <i class="fas fa-shopping-bag text-gold-400"></i>
         <span class="hidden md:inline text-sm font-medium">السلة</span>
-        <span id="cartCount" class="absolute -top-2 -left-2 bg-gradient-to-r from-gold-300 to-gold-600 text-[#2a1c07] text-[11px] w-5 h-5 rounded-full flex items-center justify-center font-bold hidden">0</span>
+        <span id="cartCount" class="absolute -top-2 -left-2 bg-gradient-to-r from-gold-300 to-gold-600 text-[#071018] text-[11px] w-5 h-5 rounded-full flex items-center justify-center font-bold hidden">0</span>
       </button>
     </div>
   </nav>
@@ -223,7 +230,7 @@ body{font-family:'Tajawal',sans-serif;overflow-x:hidden;background:#0d0a04;color
 
 <!-- Modal -->
 <div id="productModal" class="modal-overlay hidden fixed inset-0 z-[90] flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
-  <div class="modal-content relative bg-[#120c05]/98 rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto border border-gold-400/30 shadow-2xl">
+  <div class="modal-content relative bg-[#08121f]/98 rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto border border-gold-400/30 shadow-2xl">
     <button onclick="closeProductModal()" class="absolute top-4 left-4 w-9 h-9 rounded-full bg-black/60 border border-gold-400/30 flex items-center justify-center text-gold-200 hover:bg-gold-400/25 transition z-10">
       <i class="fas fa-times"></i></button>
 
@@ -318,18 +325,18 @@ body{font-family:'Tajawal',sans-serif;overflow-x:hidden;background:#0d0a04;color
 <div class="fab-cart" id="fabCart" style="display:none">
   <button onclick="toggleCart(event)">
     <i id="fabIcon" class="fas fa-shopping-bag text-xl"></i>
-    <span id="cartCountFab" class="absolute -top-1 -right-1 bg-red-600 text-white text-[11px] w-6 h-6 rounded-full flex items-center justify-center font-bold border-2 border-[#0b0803] hidden">0</span>
+    <span id="cartCountFab" class="absolute -top-1 -right-1 bg-red-600 text-white text-[11px] w-6 h-6 rounded-full flex items-center justify-center font-bold border-2 border-[#05090f] hidden">0</span>
   </button>
 </div>
 
 <script>
 /* ==================== إعدادات Sanity ==================== */
-// ⚠️ غيّر هذا المعرف بعد إنشاء مشروع Sanity في الخطوة التالية
-const SANITY_PROJECT_ID = '';
+// معرف مشروع Sanity الخاص بمتجر أيمن
+const SANITY_PROJECT_ID = 'p8stu12g';
 const SANITY_DATASET = 'production';
 
 let client = null;
-if (SANITY_PROJECT_ID !== 'YOUR_SANITY_PROJECT_ID') {
+if (SANITY_PROJECT_ID && SANITY_PROJECT_ID !== 'YOUR_SANITY_PROJECT_ID') {
   if (window.sanityClient) {
     client = window.sanityClient({
       projectId: SANITY_PROJECT_ID,
@@ -419,33 +426,33 @@ function loadFallbackData() {
   ];
   productsData = {
     'الخرطوم': [
-      { id: 1, name: 'قميص رسمي كلاسيكي', price: 4500, category: 'men', icon: 'fa-shirt' },
-      { id: 2, name: 'فستان سهرة أنيق', price: 12000, category: 'women', icon: 'fa-person-dress' },
-      { id: 3, name: 'تيشيرت قطني مريح', price: 2500, category: 'men', icon: 'fa-shirt' },
-      { id: 4, name: 'بلوزة نسائية عصرية', price: 3800, category: 'women', icon: 'fa-vest' },
-      { id: 5, name: 'بنطلون جينز رجالي', price: 5500, category: 'men', icon: 'fa-user-tie' },
-      { id: 6, name: 'حقيبة يد جلدية', price: 6500, category: 'accessories', icon: 'fa-bag-shopping' }
+      { id: 1, name: 'قميص رسمي كلاسيكي', price: 4500, category: 'shirts', icon: 'fa-shirt' },
+      { id: 2, name: 'بجامة قطنية مريحة', price: 3200, category: 'pajamas', icon: 'fa-bed' },
+      { id: 3, name: 'تيشيرت قطني مريح', price: 2500, category: 'shirts', icon: 'fa-shirt' },
+      { id: 4, name: 'بنطلون جينز رجالي', price: 5500, category: 'pants', icon: 'fa-user-tie' },
+      { id: 5, name: 'حذاء رياضي أنيق', price: 7500, category: 'shoes', icon: 'fa-shoe-prints' },
+      { id: 6, name: 'قميص مقاس كبير', price: 4800, category: 'plus', icon: 'fa-shirt' }
     ],
     'أم درمان': [
-      { id: 7, name: 'ثوب سوداني تقليدي', price: 8000, category: 'men', icon: 'fa-user-tie' },
-      { id: 8, name: 'توب نسائي مطرز', price: 9500, category: 'women', icon: 'fa-person-dress' },
-      { id: 9, name: 'عمامة قطنية فاخرة', price: 3500, category: 'men', icon: 'fa-hat-cowboy' }
+      { id: 7, name: 'قميص كاجوال', price: 4000, category: 'shirts', icon: 'fa-shirt' },
+      { id: 8, name: 'بنطلون قماش رسمي', price: 6000, category: 'pants', icon: 'fa-user-tie' },
+      { id: 9, name: 'طقم بجامة صيفي', price: 3500, category: 'pajamas', icon: 'fa-bed' }
     ],
     'بحري': [
-      { id: 10, name: 'بولو قطني ممتاز', price: 3200, category: 'men', icon: 'fa-shirt' },
-      { id: 11, name: 'فستان كاجوال صيفي', price: 5500, category: 'women', icon: 'fa-person-dress' }
+      { id: 10, name: 'بولو قطني ممتاز', price: 3200, category: 'shirts', icon: 'fa-shirt' },
+      { id: 11, name: 'حذاء كلاسيكي جلد', price: 9000, category: 'shoes', icon: 'fa-shoe-prints' }
     ],
     'عطبرة': [
-      { id: 12, name: 'قميص كتان فاخر', price: 5000, category: 'men', icon: 'fa-shirt' },
-      { id: 13, name: 'فستان سواريه ذهبي', price: 18000, category: 'women', icon: 'fa-gem' }
+      { id: 12, name: 'قميص كتان فاخر', price: 5000, category: 'shirts', icon: 'fa-shirt' },
+      { id: 13, name: 'بنطلون جينز مقاس كبير', price: 6500, category: 'plus', icon: 'fa-user-tie' }
     ],
     'كوستي': [
-      { id: 14, name: 'تيشيرت رياضي', price: 2800, category: 'men', icon: 'fa-person-running' },
-      { id: 15, name: 'فستان قطني يومي', price: 4500, category: 'women', icon: 'fa-person-dress' }
+      { id: 14, name: 'تيشيرت رياضي', price: 2800, category: 'shirts', icon: 'fa-shirt' },
+      { id: 15, name: 'بجامة أطفال قطنية', price: 2400, category: 'pajamas', icon: 'fa-bed' }
     ],
     'بورتسودان': [
-      { id: 16, name: 'قميص بحري مقلم', price: 3500, category: 'men', icon: 'fa-shirt' },
-      { id: 17, name: 'فستان شاطئي ملون', price: 6000, category: 'women', icon: 'fa-person-dress' }
+      { id: 16, name: 'قميص بحري مقلم', price: 3500, category: 'shirts', icon: 'fa-shirt' },
+      { id: 17, name: 'حذاء صيفي مريح', price: 5800, category: 'shoes', icon: 'fa-shoe-prints' }
     ]
   };
 }
@@ -652,7 +659,6 @@ function updateCartUI() {
         <h4 class="font-bold text-[13px] truncate">${it.name}</h4>
         <div class="flex items-center gap-1.5 mt-1 text-[10px] text-gold-100/55">
           <span class="px-2 py-0.5 rounded-full bg-gold-400/12 border border-gold-400/20">${it.size}</span>
-          <span class="px-2 py-0.5 rounded-full bg-gold-400/12 border border-gold-400/20">${it.color}</span>
         </div>
         <div class="flex items-center justify-between mt-1.5">
           <div class="flex items-center gap-1.5">
@@ -682,13 +688,13 @@ function checkout() {
   if (!cart.length) { showToast('السلة فارغة!', 'error'); return; }
   const t = totals();
 
-  let m = `👑 *طلب جديد من متجر نور للملابس*\n━━━━━━━━━━━━━━━━━━\n\n`;
+  let m = `👕 *طلب جديد من متجر أيمن للملابس*\n━━━━━━━━━━━━━━━━━━\n\n`;
   m += `📍 *الفرع:* ${selectedBranch}\n👤 *اسم العميل:* ${name}\n📞 *رقم الهاتف:* ${phone}\n📍 *العنوان:* ${address}\n${backupPhone ? `📞 *رقم احتياطي:* ${backupPhone}\n` : ''}\n`;
   m += `🛒 *تفاصيل الطلب:*\n──────────────\n`;
   cart.forEach((it, i) => {
-    m += `\n${i+1}. *${it.name}*\n   📏 المقاس: ${it.size}\n   🎨 اللون: ${it.color}\n   📦 الكمية: ${it.qty}\n   💰 السعر: ${money(it.price * it.qty)}\n`;
+    m += `\n${i+1}. *${it.name}*\n   📏 المقاس: ${it.size}\n   📦 الكمية: ${it.qty}\n   💰 السعر: ${money(it.price * it.qty)}\n`;
   });
-  m += `\n──────────────\n🧾 المجموع الفرعي: ${money(t.sub)}\n🚚 رسوم التوصيل (${selectedBranch}): ${money(t.del)}\n💵 *الإجمالي النهائي: ${money(t.grand)}*\n\n━━━━━━━━━━━━━━━━━━\n✨ شكراً لتسوقكم من متجر نور!`;
+  m += `\n──────────────\n🧾 المجموع الفرعي: ${money(t.sub)}\n🚚 رسوم التوصيل (${selectedBranch}): ${money(t.del)}\n💵 *الإجمالي النهائي: ${money(t.grand)}*\n\n━━━━━━━━━━━━━━━━━━\n✨ شكراً لتسوقكم من متجر أيمن!`;
 
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(m)}`, '_blank');
   showToast('جاري تحويلك إلى الواتساب...', 'success');
@@ -698,7 +704,7 @@ function showToast(msg, type = 'info') {
   const ic = { success: 'fas fa-check-circle text-emerald-400', error: 'fas fa-exclamation-circle text-red-400', info: 'fas fa-info-circle text-gold-400' };
   const bd = { success: 'border-emerald-500/35', error: 'border-red-500/35', info: 'border-gold-400/35' };
   const t = document.createElement('div');
-  t.className = `toast flex items-center gap-3 px-5 py-3 rounded-2xl bg-[#120c05]/97 border ${bd[type]} shadow-2xl`;
+  t.className = `toast flex items-center gap-3 px-5 py-3 rounded-2xl bg-[#08121f]/97 border ${bd[type]} shadow-2xl`;
   t.innerHTML = `<i class="${ic[type]}"></i><span class="text-sm font-medium">${msg}</span>`;
   document.getElementById('toastContainer').appendChild(t);
   setTimeout(() => t.remove(), 3100);
