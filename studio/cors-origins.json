@@ -1,0 +1,19 @@
+{
+  "_comment": "قائمة نطاقات CORS المسموح لها بالاتصال بمشروع Sanity (Project ID: p8stu12g). أضِف هذه النطاقات من: sanity.io/manage > API > CORS Origins، أو عبر الأوامر أدناه.",
+  "projectId": "p8stu12g",
+  "dataset": "production",
+  "origins": [
+    {"origin": "http://localhost:3333", "allowCredentials": true, "_note": "لوحة تحكم Sanity محلياً"},
+    {"origin": "http://localhost:8080", "allowCredentials": false, "_note": "المتجر أثناء التطوير المحلي"},
+    {"origin": "http://localhost:5500", "allowCredentials": false, "_note": "Live Server أثناء التطوير"},
+    {"origin": "https://bcdea2005-web.github.io", "allowCredentials": false, "_note": "استضافة GitHub Pages للمتجر"},
+    {"origin": "https://*.github.io", "allowCredentials": false, "_note": "أي صفحة GitHub Pages"}
+  ],
+  "cliCommands": [
+    "# ثبّت أدوات Sanity أولاً: npm i -g sanity  (أو استخدم npx)",
+    "sanity cors add https://bcdea2005-web.github.io --no-credentials",
+    "sanity cors add http://localhost:8080 --no-credentials",
+    "sanity cors add http://localhost:3333 --credentials",
+    "sanity cors list"
+  ]
+}
