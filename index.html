@@ -189,7 +189,7 @@ body{font-family:'Tajawal',sans-serif;overflow-x:hidden;background:#060b14;color
       <div class="relative" id="branchWrap">
         <button onclick="toggleBranchDD(event)" class="flex items-center gap-2 px-3 md:px-4 py-2 rounded-xl bg-gold-400/10 border border-gold-400/25 hover:bg-gold-400/20 transition text-sm">
           <i class="fas fa-map-marker-alt text-gold-400"></i>
-          <span id="currentBranchLabel" class="font-medium">الخرطوم</span>
+          <span id="currentBranchLabel" class="font-medium">اختر الفرع</span>
           <i class="fas fa-chevron-down text-gold-200/50 text-[10px]"></i>
         </button>
         <div id="branchDropdown" class="branch-dropdown absolute top-full mt-2 right-0 w-56 rounded-xl overflow-hidden shadow-2xl hidden z-50"></div>
@@ -205,7 +205,7 @@ body{font-family:'Tajawal',sans-serif;overflow-x:hidden;background:#060b14;color
   <div class="pt-24 pb-32 px-4 md:px-8">
     <div class="max-w-7xl mx-auto">
       <div class="text-center mb-8">
-        <h2 class="text-2xl md:text-4xl font-black mb-3">تشكيلة فرع <span id="branchTitle" class="logo-text">الخرطوم</span></h2>
+        <h2 class="text-2xl md:text-4xl font-black mb-3">تشكيلة فرع <span id="branchTitle" class="logo-text">—</span></h2>
         <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full deliv-chip text-sm">
           <i class="fas fa-truck-fast text-gold-400"></i>
           <span class="text-gold-100/80">رسوم التوصيل:</span>
@@ -333,7 +333,7 @@ body{font-family:'Tajawal',sans-serif;overflow-x:hidden;background:#060b14;color
 /* ==================== إعدادات Sanity ==================== */
 // معرف مشروع Sanity الخاص بمتجر أيمن
 const SANITY_PROJECT_ID = 'p8stu12g';
-const SANITY_DATASET = 'production';
+const SANITY_DATASET = '1production';
 
 let client = null;
 if (SANITY_PROJECT_ID && SANITY_PROJECT_ID !== 'YOUR_SANITY_PROJECT_ID') {
@@ -358,6 +358,7 @@ if (SANITY_PROJECT_ID && SANITY_PROJECT_ID !== 'YOUR_SANITY_PROJECT_ID') {
 let WHATSAPP_NUMBER = '249123456789';
 let branches = [];
 let productsData = {};
+let dataError = false;
 let selectedBranch='', cart=[], currentProduct=null,
     selectedSize='', quantity=1, cartOpen=false, activeCat='all';
 
@@ -405,61 +406,32 @@ async function initStore() {
       });
       console.log('✅ تم تحميل البيانات من Sanity');
     } catch (e) {
-      console.warn('⚠️ تعذر الاتصال بـ Sanity، جاري استخدام البيانات المبدئية:', e);
-      loadFallbackData();
+      console.warn('⚠️ تعذر الاتصال بـ Sanity:', e);
+      dataError = true;
     }
   } else {
-    loadFallbackData();
+    console.warn('⚠️ لم يتم ضبط معرّف مشروع Sanity — لن تُعرض أي بيانات.');
+    dataError = true;
   }
 
   buildBranchGrid();
 }
 
-function loadFallbackData() {
-  branches = [
-    { name: 'الخرطوم',   icon: 'fa-city',   desc: 'العاصمة',             deliveryFee: 1500 },
-    { name: 'أم درمان',  icon: 'fa-mosque', desc: 'المدينة الوطنية',     deliveryFee: 2000 },
-    { name: 'بحري',      icon: 'fa-water',  desc: 'الخرطوم بحري',        deliveryFee: 2000 },
-    { name: 'عطبرة',     icon: 'fa-train',  desc: 'مدينة الحديد والنار', deliveryFee: 3500 },
-    { name: 'كوستي',     icon: 'fa-leaf',   desc: 'ولاية النيل الأبيض',  deliveryFee: 4000 },
-    { name: 'بورتسودان', icon: 'fa-ship',   desc: 'عروس البحر الأحمر',   deliveryFee: 5000 }
-  ];
-  productsData = {
-    'الخرطوم': [
-      { id: 1, name: 'قميص رسمي كلاسيكي', price: 4500, category: 'shirts', icon: 'fa-shirt' },
-      { id: 2, name: 'بجامة قطنية مريحة', price: 3200, category: 'pajamas', icon: 'fa-bed' },
-      { id: 3, name: 'تيشيرت قطني مريح', price: 2500, category: 'shirts', icon: 'fa-shirt' },
-      { id: 4, name: 'بنطلون جينز رجالي', price: 5500, category: 'pants', icon: 'fa-user-tie' },
-      { id: 5, name: 'حذاء رياضي أنيق', price: 7500, category: 'shoes', icon: 'fa-shoe-prints' },
-      { id: 6, name: 'قميص مقاس كبير', price: 4800, category: 'plus', icon: 'fa-shirt' }
-    ],
-    'أم درمان': [
-      { id: 7, name: 'قميص كاجوال', price: 4000, category: 'shirts', icon: 'fa-shirt' },
-      { id: 8, name: 'بنطلون قماش رسمي', price: 6000, category: 'pants', icon: 'fa-user-tie' },
-      { id: 9, name: 'طقم بجامة صيفي', price: 3500, category: 'pajamas', icon: 'fa-bed' }
-    ],
-    'بحري': [
-      { id: 10, name: 'بولو قطني ممتاز', price: 3200, category: 'shirts', icon: 'fa-shirt' },
-      { id: 11, name: 'حذاء كلاسيكي جلد', price: 9000, category: 'shoes', icon: 'fa-shoe-prints' }
-    ],
-    'عطبرة': [
-      { id: 12, name: 'قميص كتان فاخر', price: 5000, category: 'shirts', icon: 'fa-shirt' },
-      { id: 13, name: 'بنطلون جينز مقاس كبير', price: 6500, category: 'plus', icon: 'fa-user-tie' }
-    ],
-    'كوستي': [
-      { id: 14, name: 'تيشيرت رياضي', price: 2800, category: 'shirts', icon: 'fa-shirt' },
-      { id: 15, name: 'بجامة أطفال قطنية', price: 2400, category: 'pajamas', icon: 'fa-bed' }
-    ],
-    'بورتسودان': [
-      { id: 16, name: 'قميص بحري مقلم', price: 3500, category: 'shirts', icon: 'fa-shirt' },
-      { id: 17, name: 'حذاء صيفي مريح', price: 5800, category: 'shoes', icon: 'fa-shoe-prints' }
-    ]
-  };
-}
-
 function buildBranchGrid() {
   const branchGrid = document.getElementById('branchGrid');
   const branchDropdown = document.getElementById('branchDropdown');
+
+  if (!branches.length) {
+    const msg = dataError
+      ? 'تعذّر جلب البيانات من Sanity. تحقق من الاتصال ومن صحة معرّف المشروع والـ dataset أعلى الملف، ثم أعد التحميل.'
+      : 'لم تُضف فروع بعد — أنشئ الفروع والمنتجات في لوحة تحكم Sanity وستظهر هنا تلقائياً.';
+    branchGrid.innerHTML = `<div class="col-span-full flex flex-col items-center justify-center text-center py-16 rounded-2xl bg-white/[.03] border border-gold-400/15">
+      <i class="fas fa-store-slash text-4xl text-gold-400/35 mb-3"></i>
+      <h3 class="text-lg font-bold text-gold-100/70 mb-1">لا توجد فروع معروضة حالياً</h3>
+      <p class="text-gold-100/40 text-sm">${msg}</p></div>`;
+    branchDropdown.innerHTML = '';
+    return;
+  }
 
   branchGrid.innerHTML = branches.map(b => `
     <button onclick="selectBranch('${b.name}')" class="branch-btn branch-reveal rounded-2xl p-5 md:p-6 group">
@@ -473,23 +445,32 @@ function buildBranchGrid() {
     <button onclick="changeBranch('${b.name}')" class="branch-dropdown-item w-full flex items-center justify-between px-4 py-2.5 text-sm">
       <span>${b.name}</span><span class="text-[11px] text-gold-300">${money(b.deliveryFee)} توصيل</span>
     </button>`).join('');
+
+  revealBranches();
+}
+
+/* تفعيل ظهور بطاقات الفروع (تُنفَّذ بعد كل رسم للشبكة) */
+function revealBranches() {
+  document.querySelectorAll('.branch-reveal').forEach((el, i) => {
+    el.classList.remove('show');
+    setTimeout(() => el.classList.add('show'), 110 * i);
+  });
 }
 
 /* Splash transition */
 window.addEventListener('load', () => {
-  // اعرض الفروع فورًا من البيانات المحلية، ثم حدّثها من Sanity في الخلفية
-  loadFallbackData();
-  buildBranchGrid();
-  initStore().catch(e => console.error('⚠️ فشل جلب بيانات Sanity:', e));
+  // كل الفروع والمنتجات تُجلب من Sanity فقط — لا توجد بيانات تجريبية داخل الملف
+  initStore().catch(e => {
+    console.error('⚠️ فشل جلب بيانات Sanity:', e);
+    dataError = true;
+    buildBranchGrid();
+  });
   setTimeout(() => {
     const splash = document.getElementById('splashScreen');
     splash.classList.add('gone');
     const bp = document.getElementById('branchPage');
     bp.style.visibility = 'visible';
     bp.classList.replace('page-hidden', 'page-visible');
-    document.querySelectorAll('.branch-reveal').forEach((el, i) => {
-      setTimeout(() => el.classList.add('show'), 120 * i);
-    });
     setTimeout(() => splash.remove(), 900);
   }, 3200);
 });
@@ -510,10 +491,7 @@ function goToBranchPage() {
   document.getElementById('productsPage').classList.replace('page-visible', 'page-hidden');
   setTimeout(() => {
     document.getElementById('branchPage').classList.replace('page-hidden', 'page-visible');
-    document.querySelectorAll('.branch-reveal').forEach((el, i) => {
-      el.classList.remove('show');
-      setTimeout(() => el.classList.add('show'), 100 * i);
-    });
+    revealBranches();
   }, 260);
 }
 

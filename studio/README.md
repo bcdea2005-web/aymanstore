@@ -3,7 +3,8 @@
 لوحة تحكم لإدارة محتوى **متجر أيمن للملابس** (الفروع، المنتجات، إعدادات المتجر) وتغذية الموقع بالبيانات مباشرةً.
 
 - **Project ID:** `p8stu12g`
-- **Dataset:** `production`
+- **Dataset:** `1production`  
+  (كان الاسم `production` سابقاً — وهذا الاسم الفعلي الموجود في المشروع؛ `production` يرجّع `404 Dataset not found`)
 
 ---
 
@@ -38,16 +39,44 @@ npx sanity cors add http://localhost:3333 --credentials
 npx sanity cors list
 ```
 
-> ملاحظة: قراءة البيانات المنشورة (published) من الـ dataset `production` عامة، لذا تعمل عبر
+> ملاحظة: قراءة البيانات المنشورة (published) من الـ dataset `1production` عامة، لذا تعمل عبر
 > رابط الـ API مباشرةً. إضافة نطاقات CORS تضمن عمل مكتبة `@sanity/client` من المتصفح دون مشاكل.
 
 ## 4) رفع البيانات الأولية (اختياري)
 
-لتعبئة اللوحة بالفروع والمنتجات الافتراضية نفسها الموجودة في المتجر:
+> **ملاحظة:** لم تعد هناك فروع أو منتجات تجريبية في المستودع — تم حذفها كلها.
+> ملف `seed.ndjson` يحتوي الآن على **إعدادات المتجر فقط** (الاسم والشعار ورقم الواتساب)،
+> وأضِف الفروع والمنتجات بنفسك من اللوحة عبر تبويبي «الفروع» و«المنتجات».
 
 ```bash
-npx sanity dataset import seed.ndjson production
+npx sanity dataset import seed.ndjson 1production
+
+# لو الـ dataset غير موجود أصلاً في مشروعك:
+npx sanity dataset create 1production
 ```
+
+> الـ dataset `1production` الآن **فارغ تماماً** (لا فروع ولا منتجات ولا إعدادات) —
+> استورد الملف أعلاه أو أضِف المحتوى من اللوحة لتظهر البيانات في المتجر.
+
+### حذف كل الفروع والمنتجات الموجودة فعلياً في الـ dataset
+
+المتجر يجلب بياناته من Sanity، لذلك إذا كانت الفروع والمنتجات التجريبية ما زالت محفوظة في
+الـ dataset فهي **ستبقى ظاهرة** حتى يُفرَّغ. بعد تسجيل الدخول (`npx sanity login`) نفّذ:
+
+```bash
+# 1) رمز مؤقت بصلاحية كتابة (احذفه من sanity.io/manage > API > Tokens بعد الانتهاء)
+npx sanity tokens create "clear-catalog" --role=editor --yes
+
+# 2) معاينة ما سيُحذف (لا يحذف شيئاً)
+SANITY_TOKEN="<الرمز>" node scripts/clear-catalog.mjs
+
+# 3) الحذف الفعلي
+SANITY_TOKEN="<الرمز>" node scripts/clear-catalog.mjs --yes
+```
+
+> السكربت يقرأ معرّفات كل مستندات `branch` و `product` من `1production` (بما فيها المسودات
+> `drafts.*`) ثم يحذفها عبر Sanity Mutations API على دفعات. لا يمسّ `storeSettings`.
+> ولأن الحذف نهائي، يُنصح بأخذ نسخة: `npx sanity dataset export backup.tar.gz 1production`.
 
 ## 5) نشر اللوحة على الإنترنت (اختياري)
 
@@ -71,7 +100,9 @@ npm run deploy            # ينشرها على https://<studioHost>.sanity.stud
 
 ```js
 const SANITY_PROJECT_ID = 'p8stu12g';
-const SANITY_DATASET = 'production';
+const SANITY_DATASET = '1production';
 ```
 
-عند تشغيل الموقع سيجلب الفروع والمنتجات من Sanity تلقائياً، ويعود للبيانات الافتراضية إذا تعذّر الاتصال.
+عند تشغيل الموقع سيجلب الفروع والمنتجات من Sanity فقط — **لم تعد هناك بيانات تجريبية مكتوبة داخل
+`index.html`**. لذا إذا تعذّر الاتصال أو كانت اللوحة فارغة، ستظهر رسالة «لا توجد فروع معروضة
+حالياً» بدل عرض فروع ومنتجات وهمية.

@@ -1,7 +1,7 @@
 {
   "_comment": "قائمة نطاقات CORS المسموح لها بالاتصال بمشروع Sanity (Project ID: p8stu12g). أضِف هذه النطاقات من: sanity.io/manage > API > CORS Origins، أو عبر الأوامر أدناه.",
   "projectId": "p8stu12g",
-  "dataset": "production",
+  "dataset": "1production",
   "origins": [
     {"origin": "http://localhost:3333", "allowCredentials": true, "_note": "لوحة تحكم Sanity محلياً"},
     {"origin": "http://localhost:8080", "allowCredentials": false, "_note": "المتجر أثناء التطوير المحلي"},
