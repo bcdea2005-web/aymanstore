@@ -3,7 +3,7 @@ import {defineCliConfig} from 'sanity/cli'
 export default defineCliConfig({
   api: {
     projectId: 'p8stu12g',
-    dataset: 'production',
+    dataset: '1production',
   },
   /**
    * يمكن تفعيل التحديث التلقائي للاستضافة عبر:

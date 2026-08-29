@@ -8,7 +8,7 @@
  *
  * الخيارات:
  *   --project <id>    افتراضي: p8stu12g
- *   --dataset <name>  افتراضي: production
+ *   --dataset <name>  افتراضي: 1production
  *   --token <token>   أو المتغير البيئي SANITY_TOKEN (رمز بصلاحية Write/Editor)
  *
  * للحصول على رمز مؤقت:
@@ -26,7 +26,7 @@ const arg = (name, fallback) => {
 }
 
 const projectId = arg('project', process.env.SANITY_PROJECT_ID || 'p8stu12g')
-const dataset = arg('dataset', process.env.SANITY_DATASET || 'production')
+const dataset = arg('dataset', process.env.SANITY_DATASET || '1production')
 const token = arg('token', process.env.SANITY_TOKEN) || ''
 const confirmed = process.argv.includes('--yes')
 const apiVersion = '2024-01-01'

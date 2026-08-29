@@ -8,7 +8,7 @@ export default defineConfig({
   title: 'متجر أيمن للملابس',
 
   projectId: 'p8stu12g',
-  dataset: 'production',
+  dataset: '1production',
 
   plugins: [
     structureTool({
