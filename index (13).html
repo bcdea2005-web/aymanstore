@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>متجر نور للملابس | Noor Clothes Store</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<!-- Sanity Client -->
+<script src="https://cdn.jsdelivr.net/npm/@sanity/client@6/dist/sanityClient.min.js"></script>
+
+<script>
+tailwind.config={theme:{extend:{
+  fontFamily:{tajawal:['Tajawal','sans-serif']},
+  colors:{gold:{50:'#fffdf2',100:'#fdf6d8',200:'#fbecab',300:'#f7dc74',400:'#f0c445',500:'#e0a72a',600:'#c4881c',700:'#9c6618',800:'#7c501b',900:'#66421a'}}
+}}}
+</script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Tajawal',sans-serif;overflow-x:hidden;background:#0d0a04;color:#fdf6d8}
+
+.bg-static{position:fixed;inset:0;z-index:-2;
+  background:
+    radial-gradient(circle at 15% 18%,rgba(240,196,69,.13) 0%,transparent 42%),
+    radial-gradient(circle at 85% 78%,rgba(196,136,28,.12) 0%,transparent 45%),
+    radial-gradient(circle at 55% 45%,rgba(253,246,216,.035) 0%,transparent 55%),
+    linear-gradient(165deg,#0b0803 0%,#160f05 48%,#0b0803 100%)}
+.bg-glow{position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(circle at 50% 30%,rgba(240,196,69,.09) 0%,transparent 55%);
+  opacity:.5;animation:softGlow 26s ease-in-out infinite;will-change:opacity}
+@keyframes softGlow{0%,100%{opacity:.35}50%{opacity:.75}}
+
+#splashScreen{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 50% 50%,#1a1206,#0d0a04);transition:opacity .8s ease,visibility .8s ease}
+#splashScreen.gone{opacity:0;visibility:hidden;pointer-events:none}
+.splash-crown{font-size:3.5rem;opacity:0;transform:scale(.3) rotate(-30deg);
+  animation:crownIn .8s cubic-bezier(.34,1.56,.64,1) .3s forwards;
+  background:linear-gradient(135deg,#fdf6d8,#f0c445 45%,#c4881c);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 25px rgba(240,196,69,.5))}
+@keyframes crownIn{to{opacity:1;transform:scale(1) rotate(0)}}
+
+.splash-title{font-size:5rem;font-weight:900;opacity:0;
+  background:linear-gradient(135deg,#fdf6d8,#f0c445 40%,#c4881c,#f7dc74);
+  background-size:300% 300%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  animation:titleIn .9s cubic-bezier(.34,1.56,.64,1) .9s forwards,shimmer 3s ease-in-out 1.8s infinite;
+  filter:drop-shadow(0 0 30px rgba(240,196,69,.4))}
+@keyframes titleIn{to{opacity:1}}
+@keyframes shimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+
+.splash-sub{font-size:1.25rem;opacity:0;color:rgba(253,246,216,.55);letter-spacing:.08em;animation:subIn .7s ease 1.5s forwards}
+@keyframes subIn{to{opacity:1}}
+.splash-line{width:0;height:3px;border-radius:4px;margin:0 auto;background:linear-gradient(90deg,transparent,#f0c445,transparent);animation:lineGrow 1.2s ease 1.8s forwards}
+@keyframes lineGrow{to{width:180px}}
+.splash-dots{display:flex;gap:8px;margin-top:2rem;opacity:0;animation:dotsIn .5s ease 2.3s forwards}
+@keyframes dotsIn{to{opacity:1}}
+.splash-dot{width:8px;height:8px;border-radius:50%;background:rgba(240,196,69,.35);animation:dotPulse 1.4s ease-in-out infinite}
+.splash-dot:nth-child(2){animation-delay:.2s}
+.splash-dot:nth-child(3){animation-delay:.4s}
+@keyframes dotPulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.2);background:#f0c445}}
+
+.page{transition:opacity .5s ease,transform .5s ease}
+.page-hidden{opacity:0;transform:translateY(24px);pointer-events:none;position:absolute;width:100%}
+.page-visible{opacity:1;transform:none}
+
+.branch-btn{position:relative;overflow:hidden;background:rgba(255,255,255,.045);border:1px solid rgba(240,196,69,.18);transition:transform .25s,border-color .25s,background .25s,box-shadow .25s}
+.branch-btn:hover{transform:translateY(-6px);background:rgba(240,196,69,.09);border-color:rgba(240,196,69,.6);box-shadow:0 16px 44px rgba(224,167,42,.22)}
+.branch-btn .icon-wrap{transition:transform .25s}
+.branch-btn:hover .icon-wrap{transform:scale(1.12)}
+
+.product-card{background:rgba(255,255,255,.04);border:1px solid rgba(240,196,69,.14);transition:transform .25s,border-color .25s,box-shadow .25s;overflow:hidden}
+.product-card:hover{transform:translateY(-6px);border-color:rgba(240,196,69,.5);box-shadow:0 16px 42px rgba(0,0,0,.45)}
+
+.thumb{position:relative;background:linear-gradient(145deg,rgba(240,196,69,.16),rgba(124,80,27,.10) 60%,rgba(0,0,0,.15));overflow:hidden;border-bottom:1px solid rgba(240,196,69,.14)}
+.thumb::before{content:'';position:absolute;inset:0;opacity:.35;background:repeating-linear-gradient(45deg,rgba(253,246,216,.045) 0 2px,transparent 2px 12px)}
+.thumb i{position:relative;z-index:2;font-size:3.2rem;background:linear-gradient(135deg,#fdf6d8,#f0c445 45%,#b8790f);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 4px 10px rgba(224,167,42,.35));transition:transform .25s}
+.product-card:hover .thumb i{transform:scale(1.12)}
+
+.modal-overlay{transition:opacity .3s}
+.modal-overlay.hidden{opacity:0;pointer-events:none}
+.modal-content{transition:transform .35s cubic-bezier(.34,1.4,.64,1),opacity .3s}
+.modal-overlay.hidden .modal-content{transform:scale(.92) translateY(20px);opacity:0}
+.modal-thumb{background:linear-gradient(145deg,rgba(240,196,69,.2),rgba(124,80,27,.12) 60%,rgba(0,0,0,.2));position:relative;overflow:hidden}
+.modal-thumb i{position:relative;z-index:2;font-size:5.5rem;background:linear-gradient(135deg,#fdf6d8,#f0c445 45%,#b8790f);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 6px 16px rgba(224,167,42,.4))}
+
+.size-btn{transition:all .2s;border:2px solid rgba(240,196,69,.22);background:rgba(255,255,255,.04)}
+.size-btn.active{border-color:#f0c445;background:rgba(240,196,69,.25);box-shadow:0 0 14px rgba(240,196,69,.3)}
+.color-option{transition:transform .2s,border-color .2s;cursor:pointer;border:3px solid transparent}
+.color-option.active{border-color:#f0c445;transform:scale(1.18);box-shadow:0 0 14px rgba(240,196,69,.5)}
+.qty-btn{transition:background .2s,border-color .2s}
+.qty-btn:hover{background:rgba(240,196,69,.22);border-color:rgba(240,196,69,.4)}
+
+.navbar{background:rgba(11,8,3,.9);backdrop-filter:blur(14px);border-bottom:1px solid rgba(240,196,69,.15)}
+.logo-text{background:linear-gradient(135deg,#fdf6d8,#f0c445 40%,#c4881c);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+
+.gold-btn{background:linear-gradient(135deg,#f7dc74,#f0c445 42%,#c4881c);color:#1e1406;transition:transform .2s,box-shadow .2s}
+.gold-btn:hover{box-shadow:0 10px 28px rgba(224,167,42,.35);transform:translateY(-2px)}
+
+.fab-cart{position:fixed;bottom:22px;left:22px;z-index:75}
+.fab-cart button{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#f7dc74,#f0c445 45%,#b8790f);color:#1b1206;box-shadow:0 10px 28px rgba(224,167,42,.42);transition:transform .25s}
+.fab-cart button:hover{transform:scale(1.07)}
+
+.cart-panel{position:fixed;bottom:94px;left:22px;width:376px;max-height:68vh;z-index:74;display:flex;flex-direction:column;transform-origin:bottom left;background:rgba(17,12,5,.96);backdrop-filter:blur(18px);border:1px solid rgba(240,196,69,.3);border-radius:22px;overflow:hidden;box-shadow:0 22px 60px rgba(0,0,0,.6);transition:opacity .28s ease,transform .32s cubic-bezier(.34,1.4,.64,1)}
+.cart-panel.closed{opacity:0;transform:translateY(20px) scale(.9);pointer-events:none}
+@media(max-width:640px){.cart-panel{left:12px;right:12px;width:auto;max-height:74vh}}
+
+.cart-item{background:rgba(255,255,255,.045);border:1px solid rgba(240,196,69,.12)}
+.mini-thumb{background:linear-gradient(145deg,rgba(240,196,69,.2),rgba(124,80,27,.12));border:1px solid rgba(240,196,69,.2)}
+.mini-thumb i{color:#f0c445;font-size:1.35rem}
+
+.toast{animation:tIn .3s ease,tOut .35s ease 2.5s forwards;background:#241707!important;color:#fff8df!important;border:1px solid rgba(240,196,69,.5);min-width:260px;justify-content:center;box-shadow:0 12px 32px rgba(0,0,0,.7);opacity:1!important}.toast span{color:#fff8df!important;opacity:1!important}.toast i{font-size:1.05rem;flex-shrink:0}
+.image-lightbox{transition:opacity .25s}.image-lightbox.hidden{opacity:0;pointer-events:none}.image-lightbox img{max-height:86vh;max-width:92vw;object-fit:contain}
+@keyframes tIn{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:none}}
+@keyframes tOut{to{opacity:0;transform:translateY(-14px)}}
+
+.whatsapp-btn{background:linear-gradient(135deg,#25d366,#0e7a5f);border:1px solid rgba(240,196,69,.3);transition:transform .2s,box-shadow .2s}
+.whatsapp-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(37,211,102,.3)}
+.form-input{background:rgba(255,255,255,.05);border:1px solid rgba(240,196,69,.22);color:#fdf6d8}
+.form-input:focus{border-color:#f0c445;outline:none}
+
+.branch-dropdown{background:rgba(17,12,5,.97);backdrop-filter:blur(14px);border:1px solid rgba(240,196,69,.22)}
+.branch-reveal{opacity:0;transform:translateY(24px) scale(.95)}
+.branch-reveal.show{opacity:1;transform:none;transition:opacity .45s ease,transform .45s ease}
+.deliv-chip{background:rgba(240,196,69,.12);border:1px solid rgba(240,196,69,.3)}
+
+</style>
+</head>
+
+<body class="font-tajawal min-h-screen">
+
+<div class="bg-static"></div>
+<div class="bg-glow"></div>
+
+<!-- Splash Screen -->
+<div id="splashScreen">
+  <div class="flex flex-col items-center justify-center text-center px-6">
+    <div class="splash-crown mb-4"><i class="fas fa-crown"></i></div>
+    <h1 class="splash-title">نور</h1>
+    <p class="splash-sub">للملابس العصرية</p>
+    <div class="splash-line mt-5"></div>
+    <div class="splash-dots">
+      <div class="splash-dot"></div>
+      <div class="splash-dot"></div>
+      <div class="splash-dot"></div>
+    </div>
+  </div>
+</div>
+
+<div id="toastContainer" class="fixed top-24 left-1/2 -translate-x-1/2 z-[100] flex flex-col gap-2 items-center pointer-events-none"></div>
+
+<!-- Branch Page -->
+<div id="branchPage" class="page page-hidden min-h-screen flex items-center justify-center px-4 py-10" style="visibility:hidden">
+  <div class="max-w-4xl w-full text-center">
+    <div class="mb-10">
+      <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-gold-300 via-gold-400 to-gold-700 mb-5 shadow-2xl shadow-gold-600/30">
+        <i class="fas fa-crown text-3xl text-[#2a1c07]"></i>
+      </div>
+      <h1 class="text-5xl md:text-7xl font-black logo-text mb-3">متجر نور</h1>
+      <p class="text-xl text-gold-200/70">للملابس العصرية</p>
+      <div class="w-28 h-[3px] bg-gradient-to-r from-transparent via-gold-400 to-transparent mx-auto mt-5 rounded-full"></div>
+    </div>
+    <div class="mb-7">
+      <h2 class="text-2xl md:text-3xl font-bold mb-2"><i class="fas fa-map-marker-alt text-gold-400 ml-2"></i>اختر فرعك المفضل</h2>
+      <p class="text-gold-100/45">حدد أقرب فرع إليك لبدء التسوق</p>
+    </div>
+    <div id="branchGrid" class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-5"></div>
+    <div class="mt-10 text-gold-100/25 text-sm">© 2025 متجر نور للملابس — جميع الحقوق محفوظة</div>
+  </div>
+</div>
+
+<!-- Products Page -->
+<div id="productsPage" class="page page-hidden min-h-screen">
+  <nav id="navbar" class="navbar fixed top-0 inset-x-0 z-50 px-4 md:px-8 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2.5 cursor-pointer" onclick="goToBranchPage()">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-gold-300 to-gold-700 flex items-center justify-center">
+          <i class="fas fa-crown text-[#2a1c07] text-sm"></i></div>
+        <h1 class="text-lg md:text-xl font-bold logo-text">متجر نور</h1>
+      </div>
+      <div class="relative" id="branchWrap">
+        <button onclick="toggleBranchDD(event)" class="flex items-center gap-2 px-3 md:px-4 py-2 rounded-xl bg-gold-400/10 border border-gold-400/25 hover:bg-gold-400/20 transition text-sm">
+          <i class="fas fa-map-marker-alt text-gold-400"></i>
+          <span id="currentBranchLabel" class="font-medium">الخرطوم</span>
+          <i class="fas fa-chevron-down text-gold-200/50 text-[10px]"></i>
+        </button>
+        <div id="branchDropdown" class="branch-dropdown absolute top-full mt-2 right-0 w-56 rounded-xl overflow-hidden shadow-2xl hidden z-50"></div>
+      </div>
+      <button onclick="toggleCart(event)" class="relative flex items-center gap-2 px-3 md:px-4 py-2 rounded-xl bg-gold-400/10 border border-gold-400/25 hover:bg-gold-400/20 transition">
+        <i class="fas fa-shopping-bag text-gold-400"></i>
+        <span class="hidden md:inline text-sm font-medium">السلة</span>
+        <span id="cartCount" class="absolute -top-2 -left-2 bg-gradient-to-r from-gold-300 to-gold-600 text-[#2a1c07] text-[11px] w-5 h-5 rounded-full flex items-center justify-center font-bold hidden">0</span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="pt-24 pb-32 px-4 md:px-8">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-8">
+        <h2 class="text-2xl md:text-4xl font-black mb-3">تشكيلة فرع <span id="branchTitle" class="logo-text">الخرطوم</span></h2>
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full deliv-chip text-sm">
+          <i class="fas fa-truck-fast text-gold-400"></i>
+          <span class="text-gold-100/80">رسوم التوصيل:</span>
+          <b id="branchDeliveryLabel" class="text-gold-300">0 ج.س</b>
+        </div>
+        <div class="w-24 h-[3px] bg-gradient-to-r from-transparent via-gold-400 to-transparent mx-auto mt-5 rounded-full"></div>
+      </div>
+
+      <div class="flex flex-wrap justify-center gap-2.5 mb-9">
+        <button onclick="filterCategory('all')" data-category="all" class="category-btn px-5 py-2 rounded-full text-sm font-medium transition">الكل</button>
+        <button onclick="filterCategory('pajamas')" data-category="pajamas" class="category-btn px-5 py-2 rounded-full text-sm font-medium transition">بجامات</button>
+        <button onclick="filterCategory('pants')" data-category="pants" class="category-btn px-5 py-2 rounded-full text-sm font-medium transition">بناطيل</button>
+        <button onclick="filterCategory('shirts')" data-category="shirts" class="category-btn px-5 py-2 rounded-full text-sm font-medium transition">أقمصة</button>
+        <button onclick="filterCategory('shoes')" data-category="shoes" class="category-btn px-5 py-2 rounded-full text-sm font-medium transition">أحذية</button>
+        <button onclick="filterCategory('plus')" data-category="plus" class="category-btn px-5 py-2 rounded-full text-sm font-medium transition">مقاسات كبيرة</button>
+      </div>
+
+      <div id="productsGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="productModal" class="modal-overlay hidden fixed inset-0 z-[90] flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+  <div class="modal-content relative bg-[#120c05]/98 rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto border border-gold-400/30 shadow-2xl">
+    <button onclick="closeProductModal()" class="absolute top-4 left-4 w-9 h-9 rounded-full bg-black/60 border border-gold-400/30 flex items-center justify-center text-gold-200 hover:bg-gold-400/25 transition z-10">
+      <i class="fas fa-times"></i></button>
+
+    <div class="modal-thumb h-44 md:h-52 flex items-center justify-center rounded-t-3xl">
+      <i id="modalIcon" class="fas fa-shirt"></i><img id="modalImage" alt="" class="absolute inset-0 w-full h-full object-cover hidden cursor-zoom-in" onclick="openFullImage(event)">
+    </div>
+
+    <div class="p-6 space-y-6">
+      <div>
+        <span id="modalCat" class="inline-block px-3 py-1 rounded-full text-[11px] font-bold mb-2 bg-gold-400/15 border border-gold-400/30 text-gold-200"></span>
+        <h3 id="modalProductName" class="text-2xl font-bold mb-1"></h3>
+        <p id="modalProductPrice" class="text-2xl font-black text-gold-400"></p>
+      </div>
+
+      <div>
+        <label class="font-bold text-sm mb-3 block"><i class="fas fa-ruler-combined text-gold-400 ml-2"></i>اختر المقاس</label>
+        <div id="sizeOptions" class="flex flex-wrap gap-3">
+          <button onclick="selSize(this,'S')" class="size-btn w-12 h-12 rounded-xl font-bold text-sm">S</button>
+          <button onclick="selSize(this,'M')" class="size-btn w-12 h-12 rounded-xl font-bold text-sm">M</button>
+          <button onclick="selSize(this,'L')" class="size-btn w-12 h-12 rounded-xl font-bold text-sm">L</button>
+          <button onclick="selSize(this,'XL')" class="size-btn w-12 h-12 rounded-xl font-bold text-sm">XL</button>
+          <button onclick="selSize(this,'XXL')" class="size-btn w-12 h-12 rounded-xl font-bold text-sm">XXL</button>
+          <button onclick="selSize(this,'XXXL')" class="size-btn w-14 h-12 rounded-xl font-bold text-sm">XXXL</button>
+        </div>
+      </div>
+
+      <div>
+        <label class="font-bold text-sm mb-3 block"><i class="fas fa-layer-group text-gold-400 ml-2"></i>الكمية</label>
+        <div class="flex items-center gap-4">
+          <button onclick="chgQty(-1)" class="qty-btn w-12 h-12 rounded-xl bg-white/5 border border-gold-400/20 flex items-center justify-center"><i class="fas fa-minus text-sm"></i></button>
+          <span id="modalQty" class="text-2xl font-bold w-12 text-center">1</span>
+          <button onclick="chgQty(1)" class="qty-btn w-12 h-12 rounded-xl bg-white/5 border border-gold-400/20 flex items-center justify-center"><i class="fas fa-plus text-sm"></i></button>
+        </div>
+      </div>
+
+      <button onclick="addToCart()" class="gold-btn w-full py-4 rounded-2xl font-black text-lg flex items-center justify-center gap-3">
+        <i class="fas fa-cart-plus text-xl"></i><span>إضافة إلى السلة</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Full image viewer -->
+<div id="imageLightbox" class="image-lightbox hidden fixed inset-0 z-[120] bg-black/90 backdrop-blur-md flex items-center justify-center p-4" onclick="closeImageLightbox()">
+  <button onclick="closeImageLightbox()" class="absolute top-5 left-5 w-11 h-11 rounded-full bg-black/70 border border-gold-400/40 text-gold-200 text-xl z-10"><i class="fas fa-times"></i></button>
+  <img id="fullProductImage" src="" alt="" class="rounded-2xl shadow-2xl border border-gold-400/30" onclick="event.stopPropagation()">
+</div>
+
+<!-- Cart Panel -->
+<div id="cartPanel" class="cart-panel closed">
+  <div class="flex items-center justify-between px-4 py-3.5 border-b border-gold-400/20 bg-gradient-to-l from-gold-400/10 to-transparent">
+    <h2 class="text-[15px] font-bold flex items-center gap-2">
+      <i class="fas fa-shopping-bag text-gold-400"></i> سلة التسوق
+      <span id="cartCountPanel" class="text-[11px] bg-gold-400/25 text-gold-200 px-2 py-0.5 rounded-full">0</span>
+    </h2>
+    <button onclick="closeCart()" class="w-8 h-8 rounded-lg bg-white/5 border border-gold-400/20 flex items-center justify-center hover:bg-gold-400/20 transition">
+      <i class="fas fa-chevron-down text-xs"></i></button>
+  </div>
+
+  <div id="cartItems" class="flex-1 overflow-y-auto p-3 space-y-2.5 min-h-[110px]"></div>
+
+  <div id="cartFooter" class="border-t border-gold-400/20 p-4 space-y-3 hidden bg-black/30">
+    <div class="space-y-1.5 text-sm">
+      <div class="flex items-center justify-between text-gold-100/65">
+        <span>المجموع الفرعي</span><span id="cartSubtotal" class="font-bold">0 ج.س</span>
+      </div>
+      <div class="flex items-center justify-between text-gold-100/65">
+        <span class="flex items-center gap-1.5"><i class="fas fa-truck-fast text-gold-400 text-xs"></i>
+          توصيل <b id="cartBranchName" class="text-gold-300 font-bold">—</b></span>
+        <span id="cartDelivery" class="font-bold text-gold-300">0 ج.س</span>
+      </div>
+      <div class="h-px bg-gold-400/20 my-1"></div>
+      <div class="flex items-center justify-between">
+        <span class="font-bold text-gold-100">الإجمالي النهائي</span>
+        <span id="cartTotal" class="text-xl font-black text-gold-400">0 ج.س</span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-2">
+      <input type="text" id="customerName" placeholder="الاسم الكامل" class="form-input w-full px-3 py-2.5 rounded-xl text-sm">
+      <input type="tel" id="customerPhone" placeholder="رقم الهاتف" class="form-input w-full px-3 py-2.5 rounded-xl text-sm" dir="ltr" style="text-align:right">
+    </div>
+    <input type="text" id="customerAddress" placeholder="العنوان بالتفصيل" class="form-input w-full px-3 py-2.5 rounded-xl text-sm">
+    <input type="tel" id="customerBackupPhone" placeholder="رقم احتياطي (اختياري)" class="form-input w-full px-3 py-2.5 rounded-xl text-sm" dir="ltr" style="text-align:right">
+
+    <button onclick="checkout()" class="whatsapp-btn w-full py-3.5 rounded-2xl text-white font-bold flex items-center justify-center gap-2">
+      <i class="fab fa-whatsapp text-xl"></i><span>إتمام الطلب عبر الواتساب</span>
+    </button>
+  </div>
+</div>
+
+<div class="fab-cart" id="fabCart" style="display:none">
+  <button onclick="toggleCart(event)">
+    <i id="fabIcon" class="fas fa-shopping-bag text-xl"></i>
+    <span id="cartCountFab" class="absolute -top-1 -right-1 bg-red-600 text-white text-[11px] w-6 h-6 rounded-full flex items-center justify-center font-bold border-2 border-[#0b0803] hidden">0</span>
+  </button>
+</div>
+
+<script>
+/* ==================== إعدادات Sanity ==================== */
+// ⚠️ غيّر هذا المعرف بعد إنشاء مشروع Sanity في الخطوة التالية
+const SANITY_PROJECT_ID = '75hfac4o';
+const SANITY_DATASET = 'production';
+
+let client = null;
+if (SANITY_PROJECT_ID !== 'YOUR_SANITY_PROJECT_ID') {
+  if (window.sanityClient) {
+    client = window.sanityClient({
+      projectId: SANITY_PROJECT_ID,
+      dataset: SANITY_DATASET,
+      apiVersion: '2024-01-01',
+      useCdn: false
+    });
+  } else {
+    // احتياطي مباشر إذا لم يتم تحميل مكتبة Sanity من CDN
+    client = { fetch: async query => {
+      const url = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2024-01-01/data/query/${SANITY_DATASET}?query=${encodeURIComponent(query)}`;
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`Sanity HTTP ${response.status}`);
+      return (await response.json()).result;
+    }};
+  }
+}
+
+let WHATSAPP_NUMBER = '249123456789';
+let branches = [];
+let productsData = {};
+let selectedBranch='', cart=[], currentProduct=null,
+    selectedSize='', quantity=1, cartOpen=false, activeCat='all';
+
+const money = n => (n||0).toLocaleString('en-US') + ' ج.س';
+const deliveryOf = n => (branches.find(b => b.name === n) || { deliveryFee: 0 }).deliveryFee;
+const catLabel = c => ({ pajamas: 'بجامات', pants: 'بناطيل', shirts: 'أقمصة', shoes: 'أحذية', plus: 'مقاسات كبيرة' }[c] || c);
+
+/* ==================== جلب البيانات من Sanity ==================== */
+async function initStore() {
+  if (client) {
+    try {
+      const settings = await client.fetch(`*[_type == "storeSettings"][0]{ storeName, whatsappNumber }`);
+      if (settings?.whatsappNumber) WHATSAPP_NUMBER = settings.whatsappNumber;
+
+      const rawBranches = await client.fetch(`*[_type == "branch" && active == true] | order(name asc) {
+        _id, name, icon, description, deliveryFee
+      }`);
+      branches = rawBranches.map(b => ({
+        name: b.name,
+        icon: b.icon || 'fa-store',
+        desc: b.description || '',
+        deliveryFee: b.deliveryFee || 0
+      }));
+
+      const rawProducts = await client.fetch(`*[_type == "product" && available == true] {
+        _id, name, price, category, icon, sizes,
+        "imageUrl": image.asset->url,
+        "branchName": branch->name
+      }`);
+
+      productsData = {};
+      branches.forEach(b => { productsData[b.name] = []; });
+      rawProducts.forEach((p, idx) => {
+        if (productsData[p.branchName]) {
+          productsData[p.branchName].push({
+            id: idx + 1,
+            name: p.name,
+            price: p.price,
+            category: p.category,
+            sizes: p.sizes || [],
+            icon: p.icon || 'fa-shirt',
+            imageUrl: p.imageUrl || ''
+          });
+        }
+      });
+      console.log('✅ تم تحميل البيانات من Sanity');
+    } catch (e) {
+      console.warn('⚠️ تعذر الاتصال بـ Sanity، جاري استخدام البيانات المبدئية:', e);
+      loadFallbackData();
+    }
+  } else {
+    loadFallbackData();
+  }
+
+  buildBranchGrid();
+}
+
+function loadFallbackData() {
+  branches = [
+    { name: 'الخرطوم',   icon: 'fa-city',   desc: 'العاصمة',             deliveryFee: 1500 },
+    { name: 'أم درمان',  icon: 'fa-mosque', desc: 'المدينة الوطنية',     deliveryFee: 2000 },
+    { name: 'بحري',      icon: 'fa-water',  desc: 'الخرطوم بحري',        deliveryFee: 2000 },
+    { name: 'عطبرة',     icon: 'fa-train',  desc: 'مدينة الحديد والنار', deliveryFee: 3500 },
+    { name: 'كوستي',     icon: 'fa-leaf',   desc: 'ولاية النيل الأبيض',  deliveryFee: 4000 },
+    { name: 'بورتسودان', icon: 'fa-ship',   desc: 'عروس البحر الأحمر',   deliveryFee: 5000 }
+  ];
+  productsData = {
+    'الخرطوم': [
+      { id: 1, name: 'قميص رسمي كلاسيكي', price: 4500, category: 'men', icon: 'fa-shirt' },
+      { id: 2, name: 'فستان سهرة أنيق', price: 12000, category: 'women', icon: 'fa-person-dress' },
+      { id: 3, name: 'تيشيرت قطني مريح', price: 2500, category: 'men', icon: 'fa-shirt' },
+      { id: 4, name: 'بلوزة نسائية عصرية', price: 3800, category: 'women', icon: 'fa-vest' },
+      { id: 5, name: 'بنطلون جينز رجالي', price: 5500, category: 'men', icon: 'fa-user-tie' },
+      { id: 6, name: 'حقيبة يد جلدية', price: 6500, category: 'accessories', icon: 'fa-bag-shopping' }
+    ],
+    'أم درمان': [
+      { id: 7, name: 'ثوب سوداني تقليدي', price: 8000, category: 'men', icon: 'fa-user-tie' },
+      { id: 8, name: 'توب نسائي مطرز', price: 9500, category: 'women', icon: 'fa-person-dress' },
+      { id: 9, name: 'عمامة قطنية فاخرة', price: 3500, category: 'men', icon: 'fa-hat-cowboy' }
+    ],
+    'بحري': [
+      { id: 10, name: 'بولو قطني ممتاز', price: 3200, category: 'men', icon: 'fa-shirt' },
+      { id: 11, name: 'فستان كاجوال صيفي', price: 5500, category: 'women', icon: 'fa-person-dress' }
+    ],
+    'عطبرة': [
+      { id: 12, name: 'قميص كتان فاخر', price: 5000, category: 'men', icon: 'fa-shirt' },
+      { id: 13, name: 'فستان سواريه ذهبي', price: 18000, category: 'women', icon: 'fa-gem' }
+    ],
+    'كوستي': [
+      { id: 14, name: 'تيشيرت رياضي', price: 2800, category: 'men', icon: 'fa-person-running' },
+      { id: 15, name: 'فستان قطني يومي', price: 4500, category: 'women', icon: 'fa-person-dress' }
+    ],
+    'بورتسودان': [
+      { id: 16, name: 'قميص بحري مقلم', price: 3500, category: 'men', icon: 'fa-shirt' },
+      { id: 17, name: 'فستان شاطئي ملون', price: 6000, category: 'women', icon: 'fa-person-dress' }
+    ]
+  };
+}
+
+function buildBranchGrid() {
+  const branchGrid = document.getElementById('branchGrid');
+  const branchDropdown = document.getElementById('branchDropdown');
+
+  branchGrid.innerHTML = branches.map(b => `
+    <button onclick="selectBranch('${b.name}')" class="branch-btn branch-reveal rounded-2xl p-5 md:p-6 group">
+      <div class="icon-wrap inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-gold-400/25 to-gold-700/15 mb-3">
+        <i class="fas ${b.icon} text-2xl text-gold-300"></i></div>
+      <h3 class="text-base md:text-lg font-bold">${b.name}</h3>
+      <p class="text-gold-100/35 text-xs mt-0.5">${b.desc}</p>
+    </button>`).join('');
+
+  branchDropdown.innerHTML = branches.map(b => `
+    <button onclick="changeBranch('${b.name}')" class="branch-dropdown-item w-full flex items-center justify-between px-4 py-2.5 text-sm">
+      <span>${b.name}</span><span class="text-[11px] text-gold-300">${money(b.deliveryFee)} توصيل</span>
+    </button>`).join('');
+}
+
+/* Splash transition */
+window.addEventListener('load', () => {
+  // اعرض الفروع فورًا من البيانات المحلية، ثم حدّثها من Sanity في الخلفية
+  loadFallbackData();
+  buildBranchGrid();
+  initStore().catch(e => console.error('⚠️ فشل جلب بيانات Sanity:', e));
+  setTimeout(() => {
+    const splash = document.getElementById('splashScreen');
+    splash.classList.add('gone');
+    const bp = document.getElementById('branchPage');
+    bp.style.visibility = 'visible';
+    bp.classList.replace('page-hidden', 'page-visible');
+    document.querySelectorAll('.branch-reveal').forEach((el, i) => {
+      setTimeout(() => el.classList.add('show'), 120 * i);
+    });
+    setTimeout(() => splash.remove(), 900);
+  }, 3200);
+});
+
+function selectBranch(b) {
+  selectedBranch = b; syncUI();
+  document.getElementById('branchPage').classList.replace('page-visible', 'page-hidden');
+  setTimeout(() => {
+    document.getElementById('productsPage').classList.replace('page-hidden', 'page-visible');
+    document.getElementById('fabCart').style.display = 'block';
+    activeCat = 'all'; renderCats(); renderProducts(); updateCartUI();
+    window.scrollTo(0, 0);
+  }, 260);
+}
+
+function goToBranchPage() {
+  closeCart(); document.getElementById('fabCart').style.display = 'none';
+  document.getElementById('productsPage').classList.replace('page-visible', 'page-hidden');
+  setTimeout(() => {
+    document.getElementById('branchPage').classList.replace('page-hidden', 'page-visible');
+    document.querySelectorAll('.branch-reveal').forEach((el, i) => {
+      el.classList.remove('show');
+      setTimeout(() => el.classList.add('show'), 100 * i);
+    });
+  }, 260);
+}
+
+function syncUI() {
+  document.getElementById('currentBranchLabel').textContent = selectedBranch;
+  document.getElementById('branchTitle').textContent = selectedBranch;
+  document.getElementById('branchDeliveryLabel').textContent = money(deliveryOf(selectedBranch));
+}
+
+function toggleBranchDD(e) { e.stopPropagation(); document.getElementById('branchDropdown').classList.toggle('hidden'); }
+function changeBranch(b) {
+  selectedBranch = b; syncUI(); document.getElementById('branchDropdown').classList.add('hidden');
+  activeCat = 'all'; renderCats(); renderProducts(); updateCartUI();
+  showToast(`الفرع: ${b} • التوصيل ${money(deliveryOf(b))}`, 'info');
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('#branchWrap')) document.getElementById('branchDropdown').classList.add('hidden');
+  if (cartOpen && !e.target.closest('#cartPanel') && !e.target.closest('#fabCart') && !e.target.closest('nav')) closeCart();
+});
+
+function renderCats() {
+  document.querySelectorAll('.category-btn').forEach(b => {
+    const on = b.dataset.category === activeCat;
+    b.className = 'category-btn px-5 py-2 rounded-full text-sm font-medium transition ' +
+      (on ? 'bg-gold-400/25 border border-gold-400/45 text-gold-100' : 'bg-white/5 border border-gold-400/15 text-gold-100/50 hover:bg-gold-400/10');
+  });
+}
+
+function filterCategory(c) { activeCat = c; renderCats(); renderProducts(); }
+
+function renderProducts() {
+  const grid = document.getElementById('productsGrid');
+  const list = productsData[selectedBranch] || [];
+  const items = activeCat === 'all' ? list : list.filter(p => p.category === activeCat);
+
+  if (!items.length) {
+    grid.innerHTML = `<div class="col-span-full text-center py-20"><i class="fas fa-box-open text-5xl text-gold-400/35 mb-4"></i><p class="text-gold-100/50 text-lg">لا توجد منتجات في هذا القسم حالياً</p></div>`;
+    return;
+  }
+
+  grid.innerHTML = items.map(p => `
+    <div class="product-card rounded-2xl cursor-pointer" onclick="openModal(${p.id})">
+      <div class="thumb h-32 md:h-40 flex items-center justify-center">
+        ${p.imageUrl ? `<img src="${p.imageUrl}" alt="${p.name}" loading="lazy" class="absolute inset-0 w-full h-full object-cover" onerror="this.remove()">` : `<i class="fas ${p.icon}"></i>`}
+        <span class="absolute top-2.5 right-2.5 z-[3] px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-black/45 border border-gold-400/30 text-gold-200">${catLabel(p.category)}</span>
+      </div>
+      <div class="p-3.5">
+        <h3 class="font-bold text-[13px] md:text-[15px] mb-1 truncate">${p.name}</h3>
+        <p class="text-gold-400 font-black text-base md:text-lg">${money(p.price)}</p>
+        <div class="gold-btn mt-2.5 w-full py-2 rounded-xl font-bold text-[13px] flex items-center justify-center gap-2 pointer-events-none">
+          <i class="fas fa-cart-plus"></i> اطلب الآن</div>
+      </div>
+    </div>`).join('');
+}
+
+function openModal(id) {
+  const p = (productsData[selectedBranch] || []).find(x => x.id === id); if (!p) return;
+  currentProduct = p;
+  const modalIcon = document.getElementById('modalIcon');
+  modalIcon.className = 'fas ' + p.icon;
+  modalIcon.classList.toggle('hidden', !!p.imageUrl);
+  const modalImage = document.getElementById('modalImage');
+  modalImage.src = p.imageUrl || ''; modalImage.alt = p.name;
+  modalImage.classList.toggle('hidden', !p.imageUrl);
+  document.getElementById('modalCat').textContent = catLabel(p.category);
+  document.getElementById('modalProductName').textContent = p.name;
+  document.getElementById('modalProductPrice').textContent = money(p.price);
+  selectedSize = ''; quantity = 1;
+  const sizeOptions = document.getElementById('sizeOptions');
+  const configuredSizes = (p.sizes || []).filter(s => s && (s.available !== false)).map(s => typeof s === 'string' ? s : s.label);
+  const visibleSizes = configuredSizes.length ? configuredSizes : ['S','M','L','XL','XXL','XXXL'];
+  sizeOptions.innerHTML = visibleSizes.map(s => `<button onclick="selSize(this,'${s}')" class="size-btn w-auto min-w-[3rem] px-3 h-12 rounded-xl font-bold text-sm">${s}</button>`).join('');
+  document.getElementById('modalQty').textContent = 1;
+  document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('productModal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function openFullImage(e) {
+  e.stopPropagation();
+  if (currentProduct?.imageUrl) { const box=document.getElementById('imageLightbox'); const image=document.getElementById('fullProductImage'); image.src=currentProduct.imageUrl; image.alt=currentProduct.name; box.classList.remove('hidden'); document.body.style.overflow='hidden'; }
+}
+
+function closeImageLightbox() { document.getElementById('imageLightbox').classList.add('hidden'); if (!document.getElementById('productModal').classList.contains('hidden')) document.body.style.overflow='hidden'; else document.body.style.overflow=''; }
+
+function closeProductModal() {
+  document.getElementById('productModal').classList.add('hidden');
+  document.body.style.overflow = ''; currentProduct = null;
+}
+document.getElementById('productModal').addEventListener('click', e => { if (e.target === document.getElementById('productModal')) closeProductModal(); });
+
+function selSize(b, s) { document.querySelectorAll('.size-btn').forEach(x => x.classList.remove('active')); b.classList.add('active'); selectedSize = s; }
+function chgQty(d) { quantity = Math.max(1, quantity + d); document.getElementById('modalQty').textContent = quantity; }
+
+function addToCart() {
+  if (!selectedSize) return showToast('يرجى اختيار المقاس', 'error');
+  const i = cart.findIndex(x => x.id === currentProduct.id && x.size === selectedSize);
+  if (i > -1) cart[i].qty += quantity;
+  else cart.push({ id: currentProduct.id, name: currentProduct.name, price: currentProduct.price, icon: currentProduct.icon, size: selectedSize, qty: quantity });
+  const n = currentProduct.name;
+  updateCartUI(true); closeProductModal();
+  showToast(`تمت إضافة "${n}" إلى السلة`, 'success');
+}
+
+function updQty(i, d) { cart[i].qty += d; if (cart[i].qty <= 0) cart.splice(i, 1); updateCartUI(); }
+function remItem(i) { const n = cart[i].name; cart.splice(i, 1); updateCartUI(); showToast(`تم حذف "${n}"`, 'info'); }
+
+function totals() {
+  const sub = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const del = cart.length ? deliveryOf(selectedBranch) : 0;
+  return { sub, del, grand: sub + del, count: cart.reduce((s, i) => s + i.qty, 0) };
+}
+
+function updateCartUI() {
+  const t = totals();
+  const cartCount = document.getElementById('cartCount');
+  const cartCountFab = document.getElementById('cartCountFab');
+  [cartCount, cartCountFab].forEach(el => {
+    if (t.count > 0) { el.textContent = t.count; el.classList.remove('hidden'); }
+    else el.classList.add('hidden');
+  });
+
+  document.getElementById('cartCountPanel').textContent = t.count;
+  document.getElementById('cartSubtotal').textContent = money(t.sub);
+  document.getElementById('cartDelivery').textContent = money(t.del);
+  document.getElementById('cartTotal').textContent = money(t.grand);
+  document.getElementById('cartBranchName').textContent = selectedBranch || '—';
+
+  const cartItems = document.getElementById('cartItems');
+  const cartFooter = document.getElementById('cartFooter');
+
+  if (!cart.length) {
+    cartItems.innerHTML = `<div class="flex flex-col items-center justify-center py-10 text-center"><i class="fas fa-shopping-bag text-4xl text-gold-400/30 mb-3"></i><h3 class="text-sm font-bold text-gold-100/55 mb-1">السلة فارغة</h3><p class="text-gold-100/30 text-xs">أضف بعض القطع الرائعة!</p></div>`;
+    cartFooter.classList.add('hidden'); return;
+  }
+
+  cartFooter.classList.remove('hidden');
+  cartItems.innerHTML = cart.map((it, i) => `
+    <div class="cart-item rounded-xl p-2.5 flex gap-2.5">
+      <div class="mini-thumb w-14 h-14 rounded-lg flex items-center justify-center flex-shrink-0"><i class="fas ${it.icon}"></i></div>
+      <div class="flex-1 min-w-0">
+        <h4 class="font-bold text-[13px] truncate">${it.name}</h4>
+        <div class="flex items-center gap-1.5 mt-1 text-[10px] text-gold-100/55">
+          <span class="px-2 py-0.5 rounded-full bg-gold-400/12 border border-gold-400/20">${it.size}</span>
+          <span class="px-2 py-0.5 rounded-full bg-gold-400/12 border border-gold-400/20">${it.color}</span>
+        </div>
+        <div class="flex items-center justify-between mt-1.5">
+          <div class="flex items-center gap-1.5">
+            <button onclick="updQty(${i},-1)" class="w-6 h-6 rounded-md bg-white/8 border border-gold-400/20 flex items-center justify-center hover:bg-gold-400/25"><i class="fas fa-minus text-[9px]"></i></button>
+            <span class="font-bold text-xs w-5 text-center">${it.qty}</span>
+            <button onclick="updQty(${i},1)" class="w-6 h-6 rounded-md bg-white/8 border border-gold-400/20 flex items-center justify-center hover:bg-gold-400/25"><i class="fas fa-plus text-[9px]"></i></button>
+          </div>
+          <span class="text-gold-400 font-bold text-xs">${money(it.price * it.qty)}</span>
+        </div>
+      </div>
+      <button onclick="remItem(${i})" class="self-start w-7 h-7 rounded-md bg-red-500/12 text-red-400 flex items-center justify-center hover:bg-red-500/25 transition"><i class="fas fa-trash-alt text-[10px]"></i></button>
+    </div>`).join('');
+}
+
+function toggleCart(e) { e && e.stopPropagation(); cartOpen ? closeCart() : openCart(); }
+function openCart() { cartOpen = true; document.getElementById('cartPanel').classList.remove('closed'); document.getElementById('fabIcon').className = 'fas fa-times text-xl'; }
+function closeCart() { cartOpen = false; document.getElementById('cartPanel').classList.add('closed'); document.getElementById('fabIcon').className = 'fas fa-shopping-bag text-xl'; }
+
+function checkout() {
+  const name = document.getElementById('customerName').value.trim();
+  const phone = document.getElementById('customerPhone').value.trim();
+  const address = document.getElementById('customerAddress').value.trim();
+  const backupPhone = document.getElementById('customerBackupPhone').value.trim();
+  if (!name) { showToast('يرجى إدخال الاسم الكامل', 'error'); document.getElementById('customerName').focus(); return; }
+  if (!address) { showToast('يرجى إدخال العنوان', 'error'); document.getElementById('customerAddress').focus(); return; }
+  if (!phone) { showToast('يرجى إدخال رقم الهاتف', 'error'); document.getElementById('customerPhone').focus(); return; }
+  if (!cart.length) { showToast('السلة فارغة!', 'error'); return; }
+  const t = totals();
+
+  let m = `👑 *طلب جديد من متجر نور للملابس*\n━━━━━━━━━━━━━━━━━━\n\n`;
+  m += `📍 *الفرع:* ${selectedBranch}\n👤 *اسم العميل:* ${name}\n📞 *رقم الهاتف:* ${phone}\n📍 *العنوان:* ${address}\n${backupPhone ? `📞 *رقم احتياطي:* ${backupPhone}\n` : ''}\n`;
+  m += `🛒 *تفاصيل الطلب:*\n──────────────\n`;
+  cart.forEach((it, i) => {
+    m += `\n${i+1}. *${it.name}*\n   📏 المقاس: ${it.size}\n   🎨 اللون: ${it.color}\n   📦 الكمية: ${it.qty}\n   💰 السعر: ${money(it.price * it.qty)}\n`;
+  });
+  m += `\n──────────────\n🧾 المجموع الفرعي: ${money(t.sub)}\n🚚 رسوم التوصيل (${selectedBranch}): ${money(t.del)}\n💵 *الإجمالي النهائي: ${money(t.grand)}*\n\n━━━━━━━━━━━━━━━━━━\n✨ شكراً لتسوقكم من متجر نور!`;
+
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(m)}`, '_blank');
+  showToast('جاري تحويلك إلى الواتساب...', 'success');
+}
+
+function showToast(msg, type = 'info') {
+  const ic = { success: 'fas fa-check-circle text-emerald-400', error: 'fas fa-exclamation-circle text-red-400', info: 'fas fa-info-circle text-gold-400' };
+  const bd = { success: 'border-emerald-500/35', error: 'border-red-500/35', info: 'border-gold-400/35' };
+  const t = document.createElement('div');
+  t.className = `toast flex items-center gap-3 px-5 py-3 rounded-2xl bg-[#120c05]/97 border ${bd[type]} shadow-2xl`;
+  t.innerHTML = `<i class="${ic[type]}"></i><span class="text-sm font-medium">${msg}</span>`;
+  document.getElementById('toastContainer').appendChild(t);
+  setTimeout(() => t.remove(), 3100);
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeImageLightbox(); closeProductModal(); closeCart(); } });
+</script>
+</body>
+        </html>
